@@ -1,0 +1,26 @@
+version: "3"
+services:
+  db:
+    image: mysql
+    container_name: thelibrary-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: thelibrary.secret
+    volumes:
+      - ./volumes_docker/db:/var/lib/mysql
+      - ./volumes_docker/mysql/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+  app:
+    build: .
+    container_name: thelibrary-app
+    volumes:
+      - .:/home/thelibrary/app
+    depends_on:
+      - db
+  nginx:
+    image: nginx
+    container_name: thelibrary-nginx
+    volumes:
+      - ./volumes_docker/conf/nginx:/etc/nginx/conf.d
+    ports:
+      - 80:80
+    depends_on:
+      - app
