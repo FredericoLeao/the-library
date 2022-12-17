@@ -7,10 +7,11 @@ services:
       MYSQL_ROOT_PASSWORD: thelibrary.secret
     volumes:
       - ./volumes_docker/db:/var/lib/mysql
-      - ./volumes_docker/mysql/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+      - ./volumes_docker/conf/mysql/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
   app:
     build: .
     container_name: thelibrary-app
+    command: sh -c "sh ./wait_db_container.sh && python ./manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/home/thelibrary/app
     depends_on:
