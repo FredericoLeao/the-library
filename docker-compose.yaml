@@ -6,12 +6,12 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: thelibrary.secret
     volumes:
-      - ./volumes_docker/db:/var/lib/mysql
-      - ./volumes_docker/conf/mysql/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+      - ./Docker/db:/var/lib/mysql
+      - ./Docker/conf/mysql/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
   app:
     build: .
     container_name: thelibrary-app
-    command: sh -c "sh ./wait_db_container.sh && python ./manage.py runserver 0.0.0.0:8000"
+    command: sh -c "sh ./Docker/init_scripts/wait_db_container_then_start_django.sh"
     volumes:
       - .:/home/thelibrary/app
     depends_on:
@@ -20,7 +20,7 @@ services:
     image: nginx
     container_name: thelibrary-nginx
     volumes:
-      - ./volumes_docker/conf/nginx:/etc/nginx/conf.d
+      - ./Docker/conf/nginx:/etc/nginx/conf.d
     ports:
       - 80:80
     depends_on:
