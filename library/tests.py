@@ -27,6 +27,11 @@ class TestLibraryAPI(APITestCase):
         self.assertEqual(res.status_code, 204)
         res = self.client.get('/api/authors/')
         self.assertEqual(len(res.json()), 3)
+        # update author
+        author_update = {'name': 'José Eduardo Agualusa'}
+        res = self.client.put(f'/api/authors/{someauthor_id}/', author_update)
+        self.assertEqual(res.json()['name'], 'José Eduardo Agualusa')
+
 
         # create categories
         category_data = {'name': 'Software Engineering'}
@@ -54,6 +59,10 @@ class TestLibraryAPI(APITestCase):
         self.assertEqual(res.status_code, 204)
         res = self.client.get('/api/categories/')
         self.assertEqual(len(res.json()), 4)
+        # update category
+        category_update = {'name': 'Economics'}
+        res = self.client.put(f'/api/categories/{somecategory_id}/', category_update)
+        self.assertEqual(res.json()['name'], 'Economics')
 
         # create books
         image_base64 = (
@@ -94,3 +103,16 @@ class TestLibraryAPI(APITestCase):
         self.assertEqual(res.status_code, 204)
         res = self.client.get('/api/books/')
         self.assertEqual(len(res.json()), 2)
+        # update book
+        patch_book = {
+            'description': 'adding description for some book...'
+        }
+        res = self.client.patch(f'/api/books/{somebook_id}/', patch_book)
+        self.assertEqual(res.json()['description'],
+                         'adding description for some book...')
+        # update book with new image
+        patch_book = {
+            'cover': 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mO8f19+DwAHHQKbe6hzCQAAAABJRU5ErkJggg=='
+        }
+        res = self.client.patch(f'/api/books/{otherbook_id}/', patch_book)
+        self.assertTrue('.png' in res.json()['cover'])
