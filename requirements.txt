@@ -3,3 +3,4 @@ mysqlclient
 django_rest_framework
 pillow
 drf-extra-fields
+drf_yasg

@@ -1,4 +1,8 @@
 from django.urls import path
+
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework import permissions
 from library.api import (
     AuthorsAPIView,
     AuthorAPIView,
@@ -9,7 +13,22 @@ from library.api import (
 )
 
 
+schema_view = get_schema_view(
+    openapi.Info(
+        title='The Library API Documentation',
+        default_version='v1',
+        description='The Library API Documentation',
+        terms_of_service=''
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
+)
+
+
 urlpatterns = [
+    path('documentation/',
+         schema_view.with_ui('swagger', cache_timeout=0),
+         name='swagger-schema'),
     path('authors/', AuthorsAPIView.as_view()),
     path('authors/<int:pk>/', AuthorAPIView.as_view()),
     path('categories/', CategoriesAPIView.as_view()),
