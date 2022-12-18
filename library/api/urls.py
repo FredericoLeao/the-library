@@ -17,7 +17,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title='The Library API Documentation',
         default_version='v1',
-        description='The Library API Documentation',
+        description='Base URL is http://your_domain.com/api',
         terms_of_service=''
     ),
     public=True,

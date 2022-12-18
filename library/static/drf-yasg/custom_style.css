@@ -1,0 +1,20 @@
+/* Custom css */
+.swagger-ui .topbar { display: none !important; }
+
+.info-custom { background-color: #ddd; padding: 25px; }
+
+.info .base-url, .info .link {
+    display: none;
+}
+
+.d-none { display: none !important; }
+
+label[for="schemes"] {
+    display: none !important;
+}
+
+.filter-container { display: none !important; }
+
+.try-out__btn { display: none; }
+
+.opblock-summary-operation-id { display: none !important; }
