@@ -56,10 +56,13 @@ class TestLibraryAPI(APITestCase):
         self.assertEqual(len(res.json()), 4)
 
         # create books
+        image_base64 = (
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==')
         book_data = {
             'name': 'Clean Code',
             'authors': [someauthor_id],
             'categories': [somecategory_id],
+            'cover': image_base64
         }
         res = self.client.post('/api/books/', book_data)
         self.assertEqual(res.status_code, 201)

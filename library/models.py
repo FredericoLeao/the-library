@@ -16,3 +16,4 @@ class Book(BaseModel):
     authors = models.ManyToManyField(Author)
     categories = models.ManyToManyField(Category)
     isbn = models.CharField(max_length=20, unique=True, null=True)
+    cover = models.ImageField(upload_to='uploads/', null=True)

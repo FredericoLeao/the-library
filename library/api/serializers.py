@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from library.models import Book, Author, Category
-
+from drf_extra_fields.fields import Base64ImageField
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,6 +15,8 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
+    cover = Base64ImageField(required=False)
+
     class Meta:
         model = Book
         fields = '__all__'
