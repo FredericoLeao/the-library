@@ -1,9 +1,10 @@
 <template>
-  <div>
-    <BookItem
+  <div class="row">
+    <div class="col-4"
       v-for="(bookItem, i) in books"
-      :key="i"
-      :bookItem="bookItem" />
+      :key="i">
+      <BookItem :bookItem="bookItem" />
+    </div>
   </div>
 </template>
 

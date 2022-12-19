@@ -1,10 +1,11 @@
 <template>
-  <div>
-    <h2>
-      {{  bookItem.name }}
-    </h2>
-    <br>{{  bookItem.id }}
-    <br>------------------------
+  <div class="card">
+    <div class="card-body">
+      <h2>
+        {{  bookItem.name }}
+      </h2>
+      ({{  bookItem.id }})
+    </div>
   </div>
 </template>
 
