@@ -4,3 +4,4 @@ django_rest_framework
 pillow
 drf-extra-fields
 drf_yasg
+django-cors-headers
