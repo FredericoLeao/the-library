@@ -1,11 +1,12 @@
 import { createWebHistory, createRouter } from "vue-router"
 import BooksIndex from '@/views/Books/Index'
+import Dashboard from '@/views/Index'
 
 const routes = [
-    // {
-    //     path: '/',
-    //     component: Dashboard
-    // },
+    {
+        path: '/',
+        component: Dashboard
+    },
     {
         path: '/books',
         component: BooksIndex,
