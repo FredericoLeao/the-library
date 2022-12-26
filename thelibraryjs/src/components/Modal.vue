@@ -10,8 +10,11 @@
           <slot></slot>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ btnCancelText }}</button>
-          <button type="button" class="btn btn-primary">{{ btnOkText }}</button>
+          <button
+            type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            @click="$emit('cancel')"
+            v-if="btnCancelVisible">{{ btnCancelText }}</button>
+          <button type="button" class="btn btn-primary" @click="$emit('ok')">{{ btnOkText }}</button>
         </div>
       </div>
     </div>
@@ -22,6 +25,7 @@
 import { Modal } from "bootstrap"
 export default {
   name: 'ModalDialog',
+  emits: ['ok', 'cancel'],
   props: {
     title: {
       type: String,
@@ -35,6 +39,10 @@ export default {
       type: String,
       default: 'Cancelar'
     },
+    btnCancelVisible: {
+      type: Boolean,
+      default: true
+    }
   },
   mounted () {
     this.modalObj = new Modal(this.$refs.modalContainer)
@@ -49,6 +57,9 @@ export default {
   methods: {
     show () {
       this.modalObj.show()
+    },
+    hide () {
+      this.modalObj.hide()
     }
   }
 }
