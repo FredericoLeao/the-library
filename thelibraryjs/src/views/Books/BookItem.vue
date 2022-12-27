@@ -2,7 +2,7 @@
   <div class="card">
     <div class="card-body">
       <h2>
-        {{  bookItem.name }}
+        {{  bookItem.title }}
       </h2>
       ({{  bookItem.id }})
     </div>
