@@ -75,7 +75,7 @@
         <div class="row">
           <div class="col-12">
             <label for="book-cover">Capa:</label>
-            <input type="file" id="book-cover" class="form-control">
+            <input type="file" id="book-cover" class="form-control" @change="loadFile">
           </div>
         </div>
       </div>
@@ -191,6 +191,15 @@ export default {
 
     okButton () {
       this.saveInstance()
+    },
+
+    loadFile (event) {
+      let fileEl = event.target.files[0]
+      let fileRead = new FileReader()
+      fileRead.addEventListener("load", () => {
+        this.bookInstance.cover = fileRead.result.toString().replace('data:', '').replace(/^.+,/, '')
+      }, false)
+      fileRead.readAsDataURL(fileEl)
     }
   }
 }

@@ -5,6 +5,9 @@
       <div v-if="bookItem.authors.length > 0">{{ bookItem.authors[0].name }}</div>
       <div v-if="bookItem.categories.length > 0">({{ bookItem.categories[0].name }})</div>
       <i v-if="!bookItem.cover" class="bi bi-book" style="font-size:190px;"></i>
+      <div v-else class="p-3">
+        <img :src="bookItem.cover" style="width:260px;height:260px;">
+      </div>
     </div>
   </div>
 </template>
