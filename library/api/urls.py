@@ -30,6 +30,7 @@ urlpatterns = [
          schema_view.with_ui('swagger', cache_timeout=0),
          name='swagger-schema'),
     path('authors/', AuthorsAPIView.as_view()),
+    path('authors/lookup/', AuthorsAPIView.as_view()),
     path('authors/<int:pk>/', AuthorAPIView.as_view()),
     path('categories/', CategoriesAPIView.as_view()),
     path('categories/<int:pk>/', CategoryAPIView.as_view()),

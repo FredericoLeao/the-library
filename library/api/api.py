@@ -53,6 +53,13 @@ class AuthorsAPIView(ListCreateAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.GET.get('lookup_string'):
+            queryset = queryset.filter(
+                name__icontains=self.request.GET.get('lookup_string'))
+        return queryset
+
     def get(self, request, *args, **kwargs):
         ''' Get a list of all Authors '''
         return super().get(request, *args, **kwargs)

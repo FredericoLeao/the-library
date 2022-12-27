@@ -1,17 +1,13 @@
 <template>
   <div class="container">
-    <modal-dialog
-      title="Add Book"
-      ref="bookFormModal">
-      <book-form />
-    </modal-dialog>
+    <book-form ref="bookForm" />
     <div>
       <HeaderMenu />
     </div>
     <div class="row">
       <div class="col-12">
         <div class="float-end">
-          <button class="btn btn-primary" @click="$refs.bookFormModal.show()">Add Book</button>
+          <button class="btn btn-primary" @click="$refs.bookForm.show()">Add Book</button>
         </div>
       </div>
     </div>
@@ -23,7 +19,6 @@
 import BookList from '@/views/Books/BookList'
 import BookForm from '@/views/Books/BookForm'
 import HeaderMenu from '@/components/HeaderMenu'
-import ModalDialog from '@/components/Modal.vue'
 import axios from 'axios'
 
 export default {
@@ -31,8 +26,7 @@ export default {
   components: {
     BookList,
     HeaderMenu,
-    BookForm,
-    ModalDialog
+    BookForm
   },
   data () {
     return {
