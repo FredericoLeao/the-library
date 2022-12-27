@@ -114,6 +114,8 @@ export default {
         description: '',
         authors: [],
         categories: [],
+        authors_ids: [],
+        categories_ids: [],
         cover: ''
       },
       selectedAuthors: [],
@@ -150,8 +152,8 @@ export default {
     },
 
     saveInstance () {
-      this.bookInstance.authors = this.selectedAuthors.map(author => author.value)
-      this.bookInstance.categories = this.selectedCategories.map(category => category.value)
+      this.bookInstance.authors_ids = this.selectedAuthors.map(author => author.value)
+      this.bookInstance.categories_ids = this.selectedCategories.map(category => category.value)
       if (!this.bookInstance.id) {
         axios.post('http://localhost/api/books/', this.bookInstance).then((response) => {
           this.responseStatus = response.status
