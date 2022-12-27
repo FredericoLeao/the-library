@@ -4,6 +4,7 @@ from base_model import BaseModel
 
 class Author(BaseModel):
     name = models.CharField(max_length=255)
+    about = models.TextField(null=True, blank=True)
 
 
 class Category(BaseModel):
@@ -11,7 +12,7 @@ class Category(BaseModel):
 
 
 class Book(BaseModel):
-    name = models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
     description = models.CharField(max_length=1500, null=True)
     authors = models.ManyToManyField(Author)
     categories = models.ManyToManyField(Category)
