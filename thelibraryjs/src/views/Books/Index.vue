@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <book-form ref="bookForm" />
+    <book-form ref="bookForm" @updateBooks="getBooks()" />
     <div>
       <HeaderMenu />
     </div>
