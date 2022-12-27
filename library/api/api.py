@@ -94,6 +94,13 @@ class CategoriesAPIView(ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.GET.get('lookup_string'):
+            queryset = queryset.filter(
+                name__icontains=self.request.GET.get('lookup_string'))
+        return queryset
+
     def get(self, request, *args, **kwargs):
         ''' Get a list of all Categories '''
         return super().get(request, *args, **kwargs)
