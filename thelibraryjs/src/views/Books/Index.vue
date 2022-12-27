@@ -49,3 +49,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.vs__dropdown-toggle {
+  border: none !important;
+}
+</style>
