@@ -32,7 +32,7 @@
 
 <script>
 import ModalDialog from '@/components/Modal.vue'
-import axios from 'axios'
+import { axiosAPI } from '@/axios'
 
 export default {
   name: 'AuthorForm',
@@ -55,7 +55,7 @@ export default {
   methods: {
     saveInstance () {
       if (!this.authorInstance.id) {
-        axios.post('http://localhost/api/authors/', this.authorInstance).then((response) => {
+        axiosAPI.post(`/authors/`, this.authorInstance).then((response) => {
           this.responseStatus = response.status
           if (response.status === 201) {
             this.$emit('update-authors')
@@ -64,7 +64,7 @@ export default {
           }
         })
       } else {
-        axios.put(`http://localhost/api/authors/${this.authorInstance.id}/`, this.authorInstance).then((response) => {
+        axiosAPI.put(`/authors/${this.authorInstance.id}/`, this.authorInstance).then((response) => {
           this.responseStatus = response.status
           if (response.status === 200) {
             // emit update object

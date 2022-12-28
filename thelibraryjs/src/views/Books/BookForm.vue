@@ -95,7 +95,7 @@
 <script>
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
-import axios from 'axios'
+import { axiosAPI } from '@/axios'
 import ModalDialog from '@/components/Modal.vue'
 
 export default {
@@ -130,7 +130,7 @@ export default {
     searchCategory (search) {
       this.categoryOptions = []
       if (search.length > 2) {
-        axios.get('http://localhost/api/categories/lookup/', { params: { lookup_string: search }})
+        axiosAPI.get(`/categories/lookup/`, { params: { lookup_string: search }})
         .then(response => {
           if (response.status === 200) {
             this.categoryOptions = response.data.map(category => { return { value: category.id, label: category.name }})
@@ -142,7 +142,7 @@ export default {
     searchAuthor (search) {
       this.authorOptions = []
       if (search.length > 2) {
-        axios.get('http://localhost/api/authors/lookup/', { params: { lookup_string: search }})
+        axiosAPI.get('/authors/lookup/', { params: { lookup_string: search }})
         .then(response => {
           if (response.status === 200) {
             this.authorOptions = response.data.map(author => { return { value: author.id, label: author.name }})
@@ -155,7 +155,7 @@ export default {
       this.bookInstance.authors_ids = this.selectedAuthors.map(author => author.value)
       this.bookInstance.categories_ids = this.selectedCategories.map(category => category.value)
       if (!this.bookInstance.id) {
-        axios.post('http://localhost/api/books/', this.bookInstance).then((response) => {
+        axiosAPI.post(`/books/`, this.bookInstance).then((response) => {
           this.responseStatus = response.status
           if (response.status === 201) {
             this.$emit('update-books')
@@ -164,7 +164,7 @@ export default {
           }
         })
       } else {
-        axios.put(`http://localhost/api/books/${this.bookInstance.id}/`, this.bookInstance).then((response) => {
+        axiosAPI.put(`/books/${this.bookInstance.id}/`, this.bookInstance).then((response) => {
           this.responseStatus = response.status
           if (response.status === 200) {
             // emit update object
@@ -173,6 +173,10 @@ export default {
       }
     },
 
+    // - Here we may use "formModal" as a ref, so we can turn theses methods into
+    // generic methods so they can be turned into a mixin, a FormMixin
+    // - The same for "formResponseModal"...
+    // - Include loadFile and saveInstance into the mixin (need some modification)
     hide () {
       this.$refs.bookFormModal.hide()
     },

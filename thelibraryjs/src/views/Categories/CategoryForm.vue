@@ -26,7 +26,7 @@
 
 <script>
 import ModalDialog from '@/components/Modal.vue'
-import axios from 'axios'
+import { axiosAPI } from '@/axios'
 
 export default {
   name: 'CategoryForm',
@@ -48,7 +48,7 @@ export default {
   methods: {
     saveInstance () {
       if (!this.categoryInstance.id) {
-        axios.post('http://localhost/api/categories/', this.categoryInstance).then((response) => {
+        axiosAPI.post('/categories/', this.categoryInstance).then((response) => {
           this.responseStatus = response.status
           if (response.status === 201) {
             this.$emit('update-categories')
@@ -57,7 +57,7 @@ export default {
           }
         })
       } else {
-        axios.put(`http://localhost/api/categories/${this.categoryInstance.id}/`, this.categoryInstance).then((response) => {
+        axiosAPI.put(`/categories/${this.categoryInstance.id}/`, this.categoryInstance).then((response) => {
           this.responseStatus = response.status
           if (response.status === 200) {
             // emit update object

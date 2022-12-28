@@ -19,7 +19,7 @@
 import AuthorList from '@/views/Authors/AuthorList'
 import AuthorForm from '@/views/Authors/AuthorForm'
 import HeaderMenu from '@/components/HeaderMenu'
-import axios from 'axios'
+import { axiosAPI } from '@/axios'
 
 export default {
   name: 'AuthorIndex',
@@ -40,7 +40,7 @@ export default {
 
   methods: {
     getAuthors () {
-      axios.get('http://localhost/api/authors/').then((response) => {
+      axiosAPI.get(`/authors/`).then((response) => {
         if (response.status === 200) {
           this.authors = response.data
         }

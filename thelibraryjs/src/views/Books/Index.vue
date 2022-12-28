@@ -19,7 +19,7 @@
 import BookList from '@/views/Books/BookList'
 import BookForm from '@/views/Books/BookForm'
 import HeaderMenu from '@/components/HeaderMenu'
-import axios from 'axios'
+import { axiosAPI } from '@/axios'
 
 export default {
   name: 'BookIndex',
@@ -40,7 +40,7 @@ export default {
 
   methods: {
     getBooks () {
-      axios.get('http://localhost/api/books/').then((response) => {
+      axiosAPI.get('/books/').then((response) => {
         if (response.status === 200) {
           this.books = response.data
         }

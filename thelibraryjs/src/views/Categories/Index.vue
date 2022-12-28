@@ -19,7 +19,7 @@
 import CategoryList from '@/views/Categories/CategoryList'
 import CategoryForm from '@/views/Categories/CategoryForm'
 import HeaderMenu from '@/components/HeaderMenu'
-import axios from 'axios'
+import { axiosAPI } from '@/axios'
 
 export default {
   name: 'CategoryIndex',
@@ -40,7 +40,7 @@ export default {
 
   methods: {
     getCategories () {
-      axios.get('http://localhost/api/categories/').then((response) => {
+      axiosAPI.get('/categories/').then((response) => {
         if (response.status === 200) {
           this.categories = response.data
         }
