@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-4"
+    <div class="col-4" style="padding:22px;"
       v-for="(bookItem, i) in books"
       :key="i">
       <BookItem :bookItem="bookItem" />

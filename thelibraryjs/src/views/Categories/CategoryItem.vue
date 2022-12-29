@@ -1,10 +1,7 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <h2>
-        {{  categoryItem.name }}
-      </h2>
-      ({{  categoryItem.id }})
+      <h3>{{ categoryItem.name }}</h3>
     </div>
   </div>
 </template>

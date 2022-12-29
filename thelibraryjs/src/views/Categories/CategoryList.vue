@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-4"
+    <div class="col-4" style="padding:22px;"
       v-for="(categoryItem, i) in categories"
       :key="i">
       <CategoryItem :categoryItem="categoryItem" />
