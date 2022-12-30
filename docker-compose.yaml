@@ -25,3 +25,12 @@ services:
       - 80:80
     depends_on:
       - app
+
+  vuejs:
+    build: ./Docker/Dockerfiles/vuejs/
+    container_name: thelibrary-vuejs
+    volumes:
+      - ./thelibraryjs:/app
+    ports:
+      - 8080:8080
+    command: npm run serve
