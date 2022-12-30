@@ -2,9 +2,9 @@
   <div>
     <modal-dialog
       title="Category Form"
-      ref="categoryFormModal"
+      ref="formModal"
       btn-ok-text="Salvar"
-      @ok="okButton()">
+      @ok="saveInstance">
       <div class="row">
         <div class="col-12">
           <label for="category-name">Nome:</label>
@@ -14,10 +14,10 @@
     </modal-dialog>
     <modal-dialog
       title="Category Form"
-      ref="categoryFormResponseModal"
+      ref="formResponseModal"
       btn-ok-text="Fechar"
       :btn-cancel-visible="false"
-      @ok="$refs.categoryFormResponseModal.hide()">
+      @ok="$refs.formResponseModal.hide()">
       <div v-if="responseStatus===201">Category's data was saved</div>
       <div v-else-if="responseStatus && responseStatus!==201">Error... this system may need a doctor</div>
     </modal-dialog>
@@ -26,61 +26,31 @@
 
 <script>
 import ModalDialog from '@/components/Modal.vue'
-import { axiosAPI } from '@/axios'
+import FormMixin from '@/mixins/FormMixin'
 
 export default {
   name: 'CategoryForm',
   props: ['category'],
   emits: ['update-categories'],
+  mixins: [FormMixin],
+
   components: {
     ModalDialog
   },
+
   data () {
     return {
+      instanceName: 'categories',
       categoryInstance: {
         id: null,
         name: ''
       },
-      responseStatus: null
     }
   },
 
-  methods: {
-    saveInstance () {
-      if (!this.categoryInstance.id) {
-        axiosAPI.post('/categories/', this.categoryInstance).then((response) => {
-          this.responseStatus = response.status
-          if (response.status === 201) {
-            this.$emit('update-categories')
-            this.hide()
-            this.showFormResponse()
-          }
-        })
-      } else {
-        axiosAPI.put(`/categories/${this.categoryInstance.id}/`, this.categoryInstance).then((response) => {
-          this.responseStatus = response.status
-          if (response.status === 200) {
-            // emit update object
-          }
-        })
-      }
-    },
-
-    hide () {
-      this.$refs.categoryFormModal.hide()
-    },
-    show () {
-      this.$refs.categoryFormModal.show()
-    },
-    showFormResponse () {
-      this.$refs.categoryFormResponseModal.show()
-    },
-    hideFormResponse () {
-      this.$refs.categoryFormResponseModal.hide()
-    },
-
-    okButton () {
-      this.saveInstance()
+  computed: {
+    loadedInstance () {
+      return this.categoryInstance
     }
   }
 }

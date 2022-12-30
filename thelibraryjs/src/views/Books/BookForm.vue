@@ -2,9 +2,9 @@
   <div>
     <modal-dialog
       title="Add Book"
-      ref="bookFormModal"
+      ref="formModal"
       btn-ok-text="Salvar"
-      @ok="okButton()">
+      @ok="saveInstance">
       <div>
         <div class="row">
           <div class="col-12">
@@ -75,17 +75,17 @@
         <div class="row">
           <div class="col-12">
             <label for="book-cover">Capa:</label>
-            <input type="file" id="book-cover" class="form-control" @change="loadFile">
+            <input type="file" id="book-cover" class="form-control" @change="loadFile($event, 'cover')">
           </div>
         </div>
       </div>
     </modal-dialog>
     <modal-dialog
       title="Book Form"
-      ref="bookFormResponseModal"
+      ref="formResponseModal"
       btn-ok-text="Fechar"
       :btn-cancel-visible="false"
-      @ok="$refs.bookFormResponseModal.hide()">
+      @ok="$refs.formResponseModal.hide()">
       <div v-if="responseStatus===201">Book's data was saved</div>
       <div v-else-if="responseStatus && responseStatus!==201">Error... this system may need a doctor</div>
     </modal-dialog>
@@ -97,10 +97,13 @@ import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
 import { axiosAPI } from '@/axios'
 import ModalDialog from '@/components/Modal.vue'
+import FormMixin from '@/mixins/FormMixin'
 
 export default {
   name: 'BookForm',
+  mixins: [FormMixin],
   emits: ['update-books'],
+
   components: {
     vSelect,
     ModalDialog
@@ -108,6 +111,7 @@ export default {
 
   data () {
     return {
+      instanceName: 'books',
       bookInstance: {
         title: '',
         isbn: '',
@@ -122,11 +126,21 @@ export default {
       selectedCategories: [],
       authorOptions: [],
       categoryOptions: [],
-      responseStatus: null
+    }
+  },
+
+  computed: {
+    loadedInstance () {
+      return this.bookInstance
     }
   },
 
   methods: {
+    prepareFormData () {
+      this.bookInstance.authors_ids = this.selectedAuthors.map(author => author.value)
+      this.bookInstance.categories_ids = this.selectedCategories.map(category => category.value)
+    },
+
     searchCategory (search) {
       this.categoryOptions = []
       if (search.length > 2) {
@@ -150,61 +164,6 @@ export default {
         })
       }
     },
-
-    saveInstance () {
-      this.bookInstance.authors_ids = this.selectedAuthors.map(author => author.value)
-      this.bookInstance.categories_ids = this.selectedCategories.map(category => category.value)
-      if (!this.bookInstance.id) {
-        axiosAPI.post(`/books/`, this.bookInstance).then((response) => {
-          this.responseStatus = response.status
-          if (response.status === 201) {
-            this.$emit('update-books')
-            this.hide()
-            this.showFormResponse()
-          }
-        })
-      } else {
-        axiosAPI.put(`/books/${this.bookInstance.id}/`, this.bookInstance).then((response) => {
-          this.responseStatus = response.status
-          if (response.status === 200) {
-            // emit update object
-          }
-        })
-      }
-    },
-
-    // - Here we may use "formModal" as a ref, so we can turn theses methods into
-    // generic methods so they can be turned into a mixin, a FormMixin
-    // - The same for "formResponseModal"...
-    // - Include loadFile and saveInstance into the mixin (need some modification)
-    hide () {
-      this.$refs.bookFormModal.hide()
-    },
-
-    show () {
-      this.$refs.bookFormModal.show()
-    },
-
-    showFormResponse () {
-      this.$refs.bookFormResponseModal.show()
-    },
-
-    hideFormResponse () {
-      this.$refs.bookFormResponseModal.hide()
-    },
-
-    okButton () {
-      this.saveInstance()
-    },
-
-    loadFile (event) {
-      let fileEl = event.target.files[0]
-      let fileRead = new FileReader()
-      fileRead.addEventListener("load", () => {
-        this.bookInstance.cover = fileRead.result.toString().replace('data:', '').replace(/^.+,/, '')
-      }, false)
-      fileRead.readAsDataURL(fileEl)
-    }
   }
 }
 </script>

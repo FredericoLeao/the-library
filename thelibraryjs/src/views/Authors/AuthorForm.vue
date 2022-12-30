@@ -2,9 +2,9 @@
   <div>
     <modal-dialog
       title="Author Form"
-      ref="authorFormModal"
+      ref="formModal"
       btn-ok-text="Salvar"
-      @ok="okButton()">
+      @ok="saveInstance">
       <div class="row">
         <div class="col-12">
           <label for="author-name">Nome:</label>
@@ -20,10 +20,10 @@
     </modal-dialog>
     <modal-dialog
       title="Author Form"
-      ref="authorFormResponseModal"
+      ref="formResponseModal"
       btn-ok-text="Fechar"
       :btn-cancel-visible="false"
-      @ok="$refs.authorFormResponseModal.hide()">
+      @ok="$refs.formResponseModal.hide()">
       <div v-if="responseStatus===201">Author's data was saved</div>
       <div v-else-if="responseStatus && responseStatus!==201">Error... this system may need a doctor</div>
     </modal-dialog>
@@ -32,62 +32,32 @@
 
 <script>
 import ModalDialog from '@/components/Modal.vue'
-import { axiosAPI } from '@/axios'
+import FormMixin from '@/mixins/FormMixin';
 
 export default {
   name: 'AuthorForm',
   props: ['author'],
+  mixins: [FormMixin],
   emits: ['update-authors'],
+
   components: {
     ModalDialog
   },
+
+  computed: {
+    loadedInstance () {
+      return this.authorInstance
+    }
+  },
+
   data () {
     return {
+      instanceName: 'authors',
       authorInstance: {
         id: null,
         name: '',
         about: ''
-      },
-      responseStatus: null
-    }
-  },
-
-  methods: {
-    saveInstance () {
-      if (!this.authorInstance.id) {
-        axiosAPI.post(`/authors/`, this.authorInstance).then((response) => {
-          this.responseStatus = response.status
-          if (response.status === 201) {
-            this.$emit('update-authors')
-            this.hide()
-            this.showFormResponse()
-          }
-        })
-      } else {
-        axiosAPI.put(`/authors/${this.authorInstance.id}/`, this.authorInstance).then((response) => {
-          this.responseStatus = response.status
-          if (response.status === 200) {
-            // emit update object
-          }
-        })
       }
-    },
-
-    hide () {
-      this.$refs.authorFormModal.hide()
-    },
-    show () {
-      this.$refs.authorFormModal.show()
-    },
-    showFormResponse () {
-      this.$refs.authorFormResponseModal.show()
-    },
-    hideFormResponse () {
-      this.$refs.authorFormResponseModal.hide()
-    },
-
-    okButton () {
-      this.saveInstance()
     }
   }
 }
