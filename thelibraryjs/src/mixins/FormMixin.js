@@ -23,22 +23,23 @@ export default {
       if (typeof this.prepareFormData === 'function') {
         this.prepareFormData()
       }
-      /** verify and exec the "validate function" */
+      /** TODO: verify and exec the "validate function" */
       if (!this.loadedInstance.id) {
         axiosAPI.post(`/${this.instanceName}/`, this.loadedInstance).then((response) => {
           this.responseStatus = response.status
           if (response.status === 201) {
-            // check if there is a configured emit with this name
             this.$emit(`update-${this.instanceName}`)
             this.hide()
             this.showFormResponse()
           }
         })
       } else {
-        axiosAPI.put(`/${this.instanceName}/${this.loadedInstance.id}/`, this.loadedInstance).then((response) => {
+        axiosAPI.patch(`/${this.instanceName}/${this.loadedInstance.id}/`, this.loadedInstance).then((response) => {
           this.responseStatus = response.status
           if (response.status === 200) {
-            // emit update object
+            this.$emit(`update-${this.instanceName}`)
+            this.hide()
+            this.showFormResponse()
           }
         })
       }

@@ -1,7 +1,10 @@
 <template>
   <div class="card">
     <div class="card-body text-center">
-      <h3>{{ bookItem.title }}</h3>
+      <h3>
+        {{ bookItem.title }}
+        <i class="bi bi-pencil-square float-end" style="cursor:pointer;" @click="editBook"></i>
+      </h3>
       <div v-if="bookItem.authors.length > 0">{{ bookItem.authors[0].name }}</div>
       <div v-else>(Missing author's name)</div>
       <div v-if="bookItem.categories.length > 0">{{ bookItem.categories[0].name }}</div>
@@ -20,10 +23,17 @@
 export default {
   name: 'BookItem',
   props: ['bookItem'],
+  emits: ['edit-book'],
 
   data () {
     return {
       
+    }
+  },
+
+  methods: {
+    editBook () {
+      this.$emit('edit-book', this.bookItem)
     }
   }
 }

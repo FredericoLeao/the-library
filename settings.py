@@ -134,7 +134,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = f'{BASE_DIR}{MEDIA_URL}'
+MEDIA_ROOT = f'{BASE_DIR}/{MEDIA_URL}'
 
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <book-form ref="bookForm" @updateBooks="getBooks()" />
+    <book-form ref="bookForm" @updateBooks="getBooks()" :bookLoad="bookLoad" />
     <div>
       <HeaderMenu />
     </div>
@@ -11,7 +11,7 @@
         </div>
       </div>
     </div>
-    <BookList :books="books"></BookList>
+    <BookList :books="books" @editBook="editBook"></BookList>
   </div>
 </template>
 
@@ -31,6 +31,7 @@ export default {
   data () {
     return {
       books: [],
+      bookLoad: {}
     }
   },
 
@@ -45,6 +46,13 @@ export default {
           this.books = response.data
         }
       })
+    },
+
+    editBook (e) {
+      this.bookLoad = Object.assign({}, e)
+      this.bookLoad.cover_url = this.bookLoad.cover
+      this.bookLoad.cover = ''
+      this.$refs.bookForm.show()
     }
   }
 }

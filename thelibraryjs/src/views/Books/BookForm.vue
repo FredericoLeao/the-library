@@ -86,8 +86,9 @@
       btn-ok-text="Fechar"
       :btn-cancel-visible="false"
       @ok="$refs.formResponseModal.hide()">
-      <div v-if="responseStatus===201">Book's data was saved</div>
-      <div v-else-if="responseStatus && responseStatus!==201">Error... this system may need a doctor</div>
+      <div v-if="responseStatus===201">Book was created</div>
+      <div v-else-if="responseStatus===200">Book's data was saved</div>
+      <div v-else-if="responseStatus">Error... this system may need a doctor</div>
     </modal-dialog>
   </div>
 </template>
@@ -103,10 +104,26 @@ export default {
   name: 'BookForm',
   mixins: [FormMixin],
   emits: ['update-books'],
+  props: ['bookLoad'],
 
   components: {
     vSelect,
     ModalDialog
+  },
+
+  watch: {
+    bookLoad (newValue) {
+      if (newValue) {
+        this.bookInstance = Object.assign({}, newValue)
+        // must arrange authors and categories
+        this.selectedCategories = this.bookInstance.categories.map((cat) => {
+          return { value: cat.id, label: cat.name }
+        })
+        this.selectedAuthors = this.bookInstance.authors.map((author) => {
+          return { value: author.id, label: author.name }
+        })
+      }
+    }
   },
 
   data () {
