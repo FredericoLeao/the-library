@@ -1,17 +1,17 @@
 <template>
   <div class="container">
-    <author-form ref="authorForm" @updateAuthors="getAuthors()" />
+    <author-form ref="authorForm" @updateAuthors="getAuthors()" :authorLoad="authorLoad" />
     <div>
       <HeaderMenu />
     </div>
     <div class="row">
       <div class="col-12">
         <div class="float-end">
-          <button class="btn btn-primary" @click="$refs.authorForm.show()">Add Author</button>
+          <button class="btn btn-primary" @click="addAuthor">Add Author</button>
         </div>
       </div>
     </div>
-    <AuthorList :authors="authors"></AuthorList>
+    <AuthorList :authors="authors" @editAuthor="editAuthor"></AuthorList>
   </div>
 </template>
 
@@ -31,6 +31,7 @@ export default {
   data () {
     return {
       authors: [],
+      authorLoad: {}
     }
   },
 
@@ -46,6 +47,17 @@ export default {
         }
       })
     },
-  }
+
+    editAuthor (author) {
+      this.authorLoad = Object.assign({}, author)
+      this.$refs.authorForm.show()
+    },
+
+    addAuthor () {
+      this.$refs.authorForm.formReset()
+      this.$refs.authorForm.show()
+    }
+  },
+
 }
 </script>

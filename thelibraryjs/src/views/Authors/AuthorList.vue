@@ -3,7 +3,7 @@
     <div class="col-4"
       v-for="(authorItem, i) in authors"
       :key="i">
-      <AuthorItem :authorItem="authorItem" />
+      <AuthorItem :authorItem="authorItem" @editAuthor="$emit('edit-author', $event)" />
     </div>
   </div>
 </template>
@@ -14,6 +14,7 @@ import AuthorItem from '@/views/Authors/AuthorItem'
 export default {
   name: 'AuthorList',
   props: ['authors'],
+  emits: ['edit-author'],
   components: {
     AuthorItem
   },

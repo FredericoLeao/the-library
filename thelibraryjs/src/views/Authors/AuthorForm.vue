@@ -24,8 +24,9 @@
       btn-ok-text="Fechar"
       :btn-cancel-visible="false"
       @ok="$refs.formResponseModal.hide()">
-      <div v-if="responseStatus===201">Author's data was saved</div>
-      <div v-else-if="responseStatus && responseStatus!==201">Error... this system may need a doctor</div>
+      <div v-if="responseStatus===201">Author was created</div>
+      <div v-else-if="responseStatus===200">Author's data was saved</div>
+      <div v-else-if="responseStatus">Error... this system may need a doctor</div>
     </modal-dialog>
   </div>
 </template>
@@ -36,12 +37,24 @@ import FormMixin from '@/mixins/FormMixin';
 
 export default {
   name: 'AuthorForm',
-  props: ['author'],
   mixins: [FormMixin],
   emits: ['update-authors'],
+  props: ['authorLoad'],
 
   components: {
     ModalDialog
+  },
+
+  mounted () {
+    this.formReset()
+  },
+
+  watch: {
+    authorLoad (newValue) {
+      if (newValue) {
+        this.authorInstance = Object.assign({}, newValue)
+      }
+    }
   },
 
   computed: {
@@ -53,11 +66,18 @@ export default {
   data () {
     return {
       instanceName: 'authors',
-      authorInstance: {
+      authorInstance: {},
+      authorObjectModel: {
         id: null,
         name: '',
         about: ''
       }
+    }
+  },
+
+  methods: {
+    formReset () {
+      this.authorInstance = Object.assign({}, this.authorObjectModel)
     }
   }
 }
