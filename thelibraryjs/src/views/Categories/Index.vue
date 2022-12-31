@@ -7,7 +7,7 @@
     <div class="row">
       <div class="col-12">
         <div class="float-end">
-          <button class="btn btn-primary" @click="$refs.categoryForm.show()">Add Category</button>
+          <button class="btn btn-primary" @click="addCategory">Add Category</button>
         </div>
       </div>
     </div>
@@ -50,6 +50,11 @@ export default {
 
     editCategory (category) {
       this.categoryLoad = Object.assign({}, category)
+      this.$refs.categoryForm.show()
+    },
+
+    addCategory () {
+      this.$refs.categoryForm.formReset()
       this.$refs.categoryForm.show()
     }
   }
