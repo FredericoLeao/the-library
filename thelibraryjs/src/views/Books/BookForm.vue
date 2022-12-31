@@ -9,7 +9,10 @@
         <div class="row">
           <div class="col-12">
             <label for="book-title">ISBN:</label>
-            <input type="text" id="book-isbn" class="form-control" maxlength="20" v-model="bookInstance.isbn">
+            <input
+              type="text" id="book-isbn" class="form-control" maxlength="20"
+              @blur="lookupByISBN"
+              v-model="bookInstance.isbn">
           </div>
         </div>
         <div class="row">
@@ -74,8 +77,13 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <label for="book-cover">Capa:</label>
+            <label for="book-cover">Cover:</label>
             <input type="file" id="book-cover" class="form-control" @change="loadFile($event, 'cover')">
+          </div>
+        </div>
+        <div class="row mt-1" v-if="bookInstance.cover_url">
+          <div class="col-12">
+            <img :src="bookInstance.cover_url" style="height:190px;">
           </div>
         </div>
       </div>
@@ -99,6 +107,7 @@ import 'vue-select/dist/vue-select.css'
 import { axiosAPI } from '@/axios'
 import ModalDialog from '@/components/Modal.vue'
 import FormMixin from '@/mixins/FormMixin'
+import axios from 'axios'
 
 export default {
   name: 'BookForm',
@@ -191,6 +200,35 @@ export default {
       this.selectedAuthors = []
       this.selectedCategories = []
       this.bookInstance = Object.assign({}, this.bookModelObject)
+    },
+
+    lookupByISBN () {
+      axios.get(`http://openlibrary.org/isbn/${this.bookInstance.isbn}.json`).then((response) => {
+        if (response.status === 200) {
+          console.log(response.data)
+          this.bookInstance.title = response.data.title
+          this.bookInstance.description = response.data.full_title
+          if (response.data.covers.length > 0) {
+            this.bookInstance.cover_url = `http://covers.openlibrary.org/b/id/${response.data.covers[0]}-L.jpg`
+            this.loadBase64ImageFromURL(this.bookInstance.cover_url)
+          }
+        }
+      })
+    },
+    loadBase64ImageFromURL (imageURL) {
+      const _this = this
+      fetch(imageURL).then((response) => {
+        if (response.status === 200) {
+          response.blob().then((blob) => {
+            console.log(blob)
+            var reader = new FileReader()
+            reader.addEventListener('load', function() {
+              _this.bookInstance.cover = reader.result.toString().replace('data:', '').replace(/^.+,/, '')
+            })
+            reader.readAsDataURL(blob)
+          })
+        }
+      })
     }
   }
 }
