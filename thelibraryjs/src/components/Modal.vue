@@ -1,5 +1,11 @@
 <template>
-  <div class="modal" tabindex="-1" ref="modalContainer" id="modal_container">
+  <div
+    class="modal"
+    tabindex="-1"
+    ref="modalContainer"
+    id="modal_container"
+    :data-bs-backdrop="staticClosure ? 'static' : 'true'"
+    :data-bs-keyboard="staticClosure ? 'false' : 'true'">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -40,6 +46,10 @@ export default {
       default: 'Cancelar'
     },
     btnCancelVisible: {
+      type: Boolean,
+      default: true
+    },
+    staticClosure: {
       type: Boolean,
       default: true
     }
