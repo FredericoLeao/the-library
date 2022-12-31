@@ -1,9 +1,13 @@
 <template>
   <div class="card">
     <div class="card-body">
+      <i
+        class="bi bi-pencil-square float-end"
+        style="cursor: pointer;"
+        @click="$emit('edit-category', this.categoryItem)">
+      </i>
       <h3>
         {{ categoryItem.name }}
-        <i class="bi bi-pencil-square float-end" @click="$emit('edit-category', this.categoryItem)"></i>
       </h3>
     </div>
   </div>

@@ -1,11 +1,10 @@
 <template>
   <div class="card">
     <div class="card-body">
+      <i class="bi bi-pencil-square float-end" style="cursor:pointer;" @click="editAuthor"></i>
       <h2>
         {{  authorItem.name }}
-        <i class="bi bi-pencil-square float-end" style="cursor:pointer;" @click="editAuthor"></i>
       </h2>
-      ({{  authorItem.id }})
     </div>
   </div>
 </template>

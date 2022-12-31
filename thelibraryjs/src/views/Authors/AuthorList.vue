@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-4"
+    <div class="col-4" style="padding:22px;"
       v-for="(authorItem, i) in authors"
       :key="i">
       <AuthorItem :authorItem="authorItem" @editAuthor="$emit('edit-author', $event)" />
