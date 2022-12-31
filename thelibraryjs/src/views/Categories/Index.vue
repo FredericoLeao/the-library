@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <category-form ref="categoryForm" @updateCategories="getCategories()" />
+    <category-form ref="categoryForm" @updateCategories="getCategories()" :categoryLoad="categoryLoad" />
     <div>
       <HeaderMenu />
     </div>
@@ -11,7 +11,7 @@
         </div>
       </div>
     </div>
-    <CategoryList :categories="categories"></CategoryList>
+    <CategoryList :categories="categories" @editCategory="editCategory"></CategoryList>
   </div>
 </template>
 
@@ -31,6 +31,7 @@ export default {
   data () {
     return {
       categories: [],
+      categoryLoad: {}
     }
   },
 
@@ -46,6 +47,11 @@ export default {
         }
       })
     },
+
+    editCategory (category) {
+      this.categoryLoad = Object.assign({}, category)
+      this.$refs.categoryForm.show()
+    }
   }
 }
 </script>

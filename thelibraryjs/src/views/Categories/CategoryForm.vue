@@ -18,8 +18,9 @@
       btn-ok-text="Fechar"
       :btn-cancel-visible="false"
       @ok="$refs.formResponseModal.hide()">
-      <div v-if="responseStatus===201">Category's data was saved</div>
-      <div v-else-if="responseStatus && responseStatus!==201">Error... this system may need a doctor</div>
+      <div v-if="responseStatus===201">Category was created</div>
+      <div v-else-if="responseStatus===200">Category's data was saved</div>
+      <div v-else-if="responseStatus">Error... this system may need a doctor</div>
     </modal-dialog>
   </div>
 </template>
@@ -30,7 +31,7 @@ import FormMixin from '@/mixins/FormMixin'
 
 export default {
   name: 'CategoryForm',
-  props: ['category'],
+  props: ['categoryLoad'],
   emits: ['update-categories'],
   mixins: [FormMixin],
 
@@ -38,10 +39,23 @@ export default {
     ModalDialog
   },
 
+  mounted () {
+    this.formReset()
+  },
+
+  watch: {
+    categoryLoad (newValue) {
+      if (Object.keys(newValue).length > 0) {
+        this.categoryInstance = Object.assign({}, newValue)
+      }
+    }
+  },
+
   data () {
     return {
       instanceName: 'categories',
-      categoryInstance: {
+      categoryInstance: {},
+      categoryModelObject: {
         id: null,
         name: ''
       },
@@ -51,6 +65,11 @@ export default {
   computed: {
     loadedInstance () {
       return this.categoryInstance
+    }
+  },
+  methods: {
+    formReset () {
+      this.categoryInstance = Object.assign({}, this.categoryModelObject)
     }
   }
 }
