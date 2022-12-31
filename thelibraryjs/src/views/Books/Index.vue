@@ -7,7 +7,7 @@
     <div class="row">
       <div class="col-12">
         <div class="float-end">
-          <button class="btn btn-primary" @click="$refs.bookForm.show()">Add Book</button>
+          <button class="btn btn-primary" @click="addBook">Add Book</button>
         </div>
       </div>
     </div>
@@ -52,6 +52,11 @@ export default {
       this.bookLoad = Object.assign({}, e)
       this.bookLoad.cover_url = this.bookLoad.cover
       this.bookLoad.cover = ''
+      this.$refs.bookForm.show()
+    },
+
+    addBook () {
+      this.$refs.bookForm.formReset()
       this.$refs.bookForm.show()
     }
   }

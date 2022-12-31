@@ -111,6 +111,10 @@ export default {
     ModalDialog
   },
 
+  mounted () {
+    this.formReset()
+  },
+
   watch: {
     bookLoad (newValue) {
       if (newValue) {
@@ -129,7 +133,8 @@ export default {
   data () {
     return {
       instanceName: 'books',
-      bookInstance: {
+      bookInstance: {},
+      bookModelObject: {
         title: '',
         isbn: '',
         description: '',
@@ -181,6 +186,12 @@ export default {
         })
       }
     },
+
+    formReset () {
+      this.selectedAuthors = []
+      this.selectedCategories = []
+      this.bookInstance = Object.assign({}, this.bookModelObject)
+    }
   }
 }
 </script>
