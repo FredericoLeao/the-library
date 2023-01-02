@@ -6,7 +6,7 @@
     id="modal_container"
     :data-bs-backdrop="staticClosure ? 'static' : 'true'"
     :data-bs-keyboard="staticClosure ? 'false' : 'true'">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">{{ title }}</h5>
@@ -16,11 +16,11 @@
           <slot></slot>
         </div>
         <div class="modal-footer">
+          <button type="button" class="btn btn-primary" @click="$emit('ok')">{{ btnOkText }}</button>
           <button
             type="button" class="btn btn-secondary" data-bs-dismiss="modal"
             @click="$emit('cancel')"
             v-if="btnCancelVisible">{{ btnCancelText }}</button>
-          <button type="button" class="btn btn-primary" @click="$emit('ok')">{{ btnOkText }}</button>
         </div>
       </div>
     </div>
