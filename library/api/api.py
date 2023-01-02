@@ -13,6 +13,7 @@ from library.api.serializers import (
     AuthorSerializer,
     CategorySerializer,
 )
+import unidecode
 
 
 class BooksAPIView(ListCreateAPIView):
@@ -57,7 +58,8 @@ class AuthorsAPIView(ListCreateAPIView):
         queryset = super().get_queryset()
         if self.request.GET.get('lookup_string'):
             queryset = queryset.filter(
-                name__icontains=self.request.GET.get('lookup_string'))
+                name__icontains=unidecode.unidecode(
+                    self.request.GET.get('lookup_string')))
         return queryset
 
     def get(self, request, *args, **kwargs):
