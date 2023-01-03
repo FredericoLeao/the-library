@@ -13,6 +13,7 @@
             </h3>
             <h5>Author(s):</h5>
             <div v-if="openLibraryLoadingAuthors"> Fetching authors data... please wait.</div>
+            <div v-else-if="!openLibrary.authorsList">No authors found</div>
             <div v-if="openLibrary.authorsList">
               <div v-for="(author, idx) in openLibrary.authorsList" :key="idx" class="card">
                 <div class="card-body">
@@ -43,7 +44,7 @@
                       :checked="author.selectedAuthorOption === 'save-ol-as-new-author'"
                       v-model="author.selectedAuthorOption">
                     <label for="save-new-author-ol-data" class="px-1">
-                      Save a new one with Open Library's Data
+                      Add this Author using this Open Library's Data
                     </label>
                   </div>
                   <div>
@@ -239,6 +240,7 @@ export default {
       },
       openLibrary: {},
       openLibraryLoadingAuthors: false,
+      openLibraryISBNLookup: '',
       selectedAuthors: [],
       selectedCategories: [],
       authorOptions: [],
@@ -295,6 +297,8 @@ export default {
 
     lookupByISBN () {
       if (this.bookInstance.isbn.trim() < 7) return
+      if (this.openLibraryISBNLookup === this.bookInstance.isbn.trim()) return
+      this.openLibraryISBNLookup = this.bookInstance.isbn.trim()
       axios.get(`http://openlibrary.org/isbn/${this.bookInstance.isbn.trim()}.json`).then((response) => {
         if (response.status === 200) {
           this.openLibrary = response.data
@@ -314,7 +318,9 @@ export default {
     },
 
     loadOpenLibraryAuthors () {
-      if (Object.keys(this.openLibrary).length === 0 || this.openLibrary.authors.length === 0) return ''
+      if (Object.keys(this.openLibrary).length === 0 ||
+          !('authors' in this.openLibrary) ||
+          this.openLibrary.authors.length === 0) return ''
       this.openLibrary.authorsList = []
       this.openLibraryLoadingAuthors = true
       // this 'openLibrary.authors' is from the 'book response' and only contains a key to be used to fetch the data
@@ -378,34 +384,31 @@ export default {
       this.bookInstance.cover_url = this.openLibrary.cover_url
       this.loadBase64ImageFromURL(this.bookInstance.cover_url)
 
-      if (!('authorsList' in this.openLibrary)) {
-        return ''
+      if ('authorsList' in this.openLibrary) {
+        await Promise.all(this.openLibrary.authorsList.map(async (author) => {
+          // clean any previously selected author, as we are asking the user what to do now
+          this.bookInstance.authors = []
+          if (author.selectedAuthorOption === 'save-ol-as-new-author') {
+            let newAuthorData = {
+              'name': author.name,
+              'description': `${author.name} (** From Open Library)`
+            }
+            const newAuthorRes = await axios.post('http://localhost/api/authors/', newAuthorData)
+            if (newAuthorRes.status === 201) {
+              this.bookInstance.authors.push({ id: newAuthorRes.data.id, name: newAuthorRes.data.name })
+            }
+          } else if (parseInt(author.selectedAuthorOption) > 0 && author.dbMatches.length > 0) {
+            this.bookInstance.authors.push(author.dbMatches.filter((dbAuthor) => dbAuthor.id === author.selectedAuthorOption).shift())
+          }
+          return author
+        }))
+        this.selectedAuthors = await this.bookInstance.authors.map((author) => {
+          return { value: author.id, label: author.name }
+        })
       }
-
-      await Promise.all(this.openLibrary.authorsList.map(async (author) => {
-        // clean any previously selected author, as we are asking the user what to do now
-        this.bookInstance.authors = []
-        if (author.selectedAuthorOption === 'save-ol-as-new-author') {
-          let newAuthorData = {
-            'name': author.name,
-            'description': `${author.name} (** From Open Library)`
-          }
-          const newAuthorRes = await axios.post('http://localhost/api/authors/', newAuthorData)
-          if (newAuthorRes.status === 201) {
-            this.bookInstance.authors.push({ id: newAuthorRes.data.id, name: newAuthorRes.data.name })
-          }
-        } else if (parseInt(author.selectedAuthorOption) > 0 && author.dbMatches.length > 0) {
-          this.bookInstance.authors.push(author.dbMatches.filter((dbAuthor) => dbAuthor.id === author.selectedAuthorOption).shift())
-        }
-        return author
-      }))
-
-      this.selectedAuthors = await this.bookInstance.authors.map((author) => {
-        return { value: author.id, label: author.name }
-      })
       this.$refs.olConfirmModal.hide()
       this.$refs.formModal.show()
-    },
+    }
   }
 }
 </script>
