@@ -83,9 +83,20 @@
             <div class="row">
               <div class="col-12">
                 <label for="book-title">ISBN:</label>
+                <small
+                  class="float-end"
+                  v-if="bookInstance.isbn && bookInstance.isbn.length >= 10">
+                  <span v-if="openLibraryLoadingBook">(Fetching data...)</span>
+                  <button
+                    class="btn btn-link p-0"
+                    style="font-size:11px;"
+                    @click="lookupByISBN"
+                    v-else-if="openLibraryISBNLookup !== bookInstance.isbn.trim()">
+                    Fetch from Open Library
+                  </button>
+                </small>
                 <input
                   type="text" id="book-isbn" class="form-control" maxlength="20"
-                  @blur="lookupByISBN"
                   v-model="bookInstance.isbn">
               </div>
             </div>
@@ -239,6 +250,7 @@ export default {
         cover: ''
       },
       openLibrary: {},
+      openLibraryLoadingBook: false,
       openLibraryLoadingAuthors: false,
       openLibraryISBNLookup: '',
       selectedAuthors: [],
@@ -299,7 +311,10 @@ export default {
       if (this.bookInstance.isbn.trim() < 7) return
       if (this.openLibraryISBNLookup === this.bookInstance.isbn.trim()) return
       this.openLibraryISBNLookup = this.bookInstance.isbn.trim()
+      this.openLibraryLoadingBook = true
+      this.openLibrary = {}
       axios.get(`http://openlibrary.org/isbn/${this.bookInstance.isbn.trim()}.json`).then((response) => {
+        this.openLibraryLoadingBook = false
         if (response.status === 200) {
           this.openLibrary = response.data
           this.openLibrary.cover_url = `http://covers.openlibrary.org/b/id/${response.data.covers[0]}-L.jpg`
@@ -308,6 +323,7 @@ export default {
           this.$refs.olConfirmModal.show()
         }
       }).catch((axiosObj) => {
+        this.openLibraryLoadingBook = false
         const response = axiosObj.response
         if (response.status === 404) {
           console.warn(`OL Book not found: ${this.bookInstance.isbn.trim()}`)
